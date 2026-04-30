@@ -1,4 +1,10 @@
 package com.platzi.platziplayapi.persistence.crud;
 
-public interface CrudMovieEntity {
+import com.platzi.platziplayapi.persistence.entity.MovieEntity;
+import org.springframework.data.repository.CrudRepository;
+
+public interface CrudMovieEntity extends CrudRepository<MovieEntity, Long> {
+
+
+
 }
