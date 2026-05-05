@@ -8,7 +8,6 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "movies")
 public class MovieEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
