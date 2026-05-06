@@ -3,6 +3,7 @@ package com.platzi.platziplayapi.domain.services;
 import com.platzi.platziplayapi.domain.dto.MovieDto;
 import com.platzi.platziplayapi.domain.dto.MovieUpdateRequestDto;
 import com.platzi.platziplayapi.domain.repository.MovieRepository;
+import dev.langchain4j.agent.tool.Tool;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,6 +16,7 @@ public class MovieService {
         this.movieRepository = movieRepository;
     }
 
+    @Tool("search all the existent movies of this platform.")
     public List<MovieDto> getAll() {
         return this.movieRepository.getAll();
     }
@@ -31,7 +33,7 @@ public class MovieService {
         return this.movieRepository.update(id, movieUpdateRequestDto);
     }
 
-    public MovieDto delete(long id) {
-        return this.movieRepository.delete(id);
+    public void delete(long id) {
+        this.movieRepository.delete(id);
     }
 }

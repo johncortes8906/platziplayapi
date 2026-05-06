@@ -2,7 +2,10 @@ package com.platzi.platziplayapi.web.controller;
 
 import com.platzi.platziplayapi.domain.dto.MovieDto;
 import com.platzi.platziplayapi.domain.dto.MovieUpdateRequestDto;
+import com.platzi.platziplayapi.domain.dto.SuggestRequestDto;
 import com.platzi.platziplayapi.domain.services.MovieService;
+import com.platzi.platziplayapi.domain.services.PlatziPlayAiService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,9 +17,17 @@ import java.util.List;
 public class MovieController {
 
     private final MovieService movieService;
+    private final PlatziPlayAiService platziPlayAiService;
+    private  final String platform;
 
-    public MovieController(MovieService movieService) {
+    public MovieController(
+            MovieService movieService,
+            PlatziPlayAiService platziPlayAiService,
+            @Value("${spring.application.name}") String platform
+    ) {
         this.movieService = movieService;
+        this.platziPlayAiService = platziPlayAiService;
+        this.platform = platform;
     }
 
     @GetMapping
@@ -57,13 +68,17 @@ public class MovieController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<MovieDto> delete(@PathVariable long id) {
-        MovieDto movieDto = this.movieService.delete(id);
+    public ResponseEntity<Void> delete(@PathVariable long id) {
+        this.movieService.delete(id);
 
-        if (movieDto == null) {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok().build();
+    }
 
-        return ResponseEntity.ok(movieDto);
+    @PostMapping("/suggests")
+    public  ResponseEntity<String> getMoviesSuggestion(@RequestBody SuggestRequestDto suggestRequestDto) {
+        return ResponseEntity.ok(
+                this.platziPlayAiService.generateMoviesSuggestion(platform,
+                        suggestRequestDto.moviesPreferences())
+        );
     }
 }

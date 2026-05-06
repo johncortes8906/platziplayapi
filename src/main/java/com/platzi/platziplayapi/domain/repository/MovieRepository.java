@@ -11,5 +11,5 @@ public interface MovieRepository {
     MovieDto getByID(long id);
     MovieDto save(MovieDto movieDto);
     MovieDto update(long id, MovieUpdateRequestDto movieUpdateRequestDto);
-    MovieDto delete(long id);
+    void delete(long id);
 }

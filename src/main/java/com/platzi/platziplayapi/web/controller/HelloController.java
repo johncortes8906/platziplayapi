@@ -12,7 +12,8 @@ public class HelloController {
     private final String platform;
 
     public HelloController(PlatziPlayAiService aiService,
-                           @Value("${spring.application.name}") String platform) {
+                           @Value("${spring.application.name}") String platform
+    ) {
         this.aiService = aiService;
         this.platform = platform;
     }
