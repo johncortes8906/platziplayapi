@@ -2,6 +2,8 @@ package com.platzi.platziplayapi.persistence;
 
 import com.platzi.platziplayapi.domain.dto.MovieDto;
 import com.platzi.platziplayapi.domain.dto.MovieUpdateRequestDto;
+import com.platzi.platziplayapi.domain.exceptions.MovieAlreadyExistException;
+import com.platzi.platziplayapi.domain.exceptions.MovieDoesntExistException;
 import com.platzi.platziplayapi.domain.repository.MovieRepository;
 import com.platzi.platziplayapi.persistence.crud.CrudMovieEntity;
 import com.platzi.platziplayapi.persistence.entity.MovieEntity;
@@ -38,6 +40,9 @@ public class MovieEntityRepository implements MovieRepository {
 
     @Override
     public MovieDto save(MovieDto movieDto) {
+        if (this.crudMovieEntity.findFirstByTitle(movieDto.title()) != null) {
+            throw new MovieAlreadyExistException(movieDto.title());
+        }
         MovieEntity movieEntity = this.movieMapper.toEntity(movieDto);
         movieEntity.setStatus("D");
 
@@ -49,7 +54,7 @@ public class MovieEntityRepository implements MovieRepository {
         MovieEntity movieEntity = this.crudMovieEntity.findById(id).orElse(null);
 
         if (movieEntity == null) {
-            return null;
+            throw new MovieDoesntExistException(id);
         }
 
         this.movieMapper.updateEntityFromDto(movieUpdateRequestDto, movieEntity);
